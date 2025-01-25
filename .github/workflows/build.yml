@@ -92,11 +92,22 @@ jobs:
     if: (github.event_name == 'push' && (contains(github.ref, 'refs/tags/v') || github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'))
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # tags
+
       - uses: actions/download-artifact@v4
         with:
           path: artifacts
 
       - run: ls -la artifacts
+
+      - name: Check Release
+        id: is-rel
+        run: |
+          set +e;
+          git describe --exact-match --match 'v*' &> /dev/null;
+          echo "IS_TAGGED=$?" >> "$GITHUB_OUTPUT";
+        shell: bash
 
       - name: Hash Files
         run: |
@@ -115,7 +126,7 @@ jobs:
 
       - name: Regular release
         uses: ncipollo/release-action@v1
-        if: contains(github.ref, 'refs/tags/v')
+        if: steps.is-rel.outputs.IS_TAGGED == '0'
         with:
           artifacts: "artifacts/**/*"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -127,7 +138,7 @@ jobs:
 
       - name: Nightly release
         uses: ncipollo/release-action@v1
-        if: github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main'
+        if: steps.is-rel.outputs.IS_TAGGED != '0'
         with:
           artifacts: "artifacts/**/*"
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -140,6 +151,7 @@ jobs:
           tag: nightly-build
 
       - name: Update nightly-build tag
+        if: steps.is-rel.outputs.IS_TAGGED != '0'
         run: |
           git tag -f nightly-build
           git push -f origin nightly-build
