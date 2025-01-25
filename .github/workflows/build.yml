@@ -97,6 +97,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
+          merge-multiple: true
           path: artifacts
 
       - run: ls -la artifacts
@@ -106,7 +107,11 @@ jobs:
         run: |
           set +e;
           git describe --exact-match --match 'v*' &> /dev/null;
-          echo "IS_TAGGED=$?" >> "$GITHUB_OUTPUT";
+          is_tagged=$?
+          echo "IS_TAGGED=$is_tagged" >> "$GITHUB_OUTPUT";
+          if [[ "$is_tagged" == "0" ]]; then
+            echo "TAG=$(git describe --exact-match --match 'v*')" >> "$GITHUB_OUTPUT";
+          fi
         shell: bash
 
       - name: Hash Files
@@ -135,6 +140,8 @@ jobs:
           draft: true
           bodyFile: body.txt
           prerelease: false
+          name: ${{ steps.is-rel.outputs.TAG }}
+          tag: ${{ steps.is-rel.outputs.TAG }}
 
       - name: Nightly release
         uses: ncipollo/release-action@v1
