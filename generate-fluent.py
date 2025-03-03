@@ -5,6 +5,7 @@ from pathlib import Path
 import json
 import argparse
 import tempfile
+from fill_emojis import fill_emojis
 
 SELF_DIR = Path(__file__).parent
 COLOR_FORMATS = [
@@ -57,11 +58,12 @@ SKINTONES = [
 ]
 
 
-def collect_emojis(type: str, twemoji: dict[str, str]) -> dict[str, str]:
+def collect_emojis(type: str, twemoji: dict[str, str]) -> tuple[set[str], Path]:
     dir = SELF_DIR / "build" / "fluent" / type
+    shutil.rmtree(dir, ignore_errors=True)
     dir.mkdir(parents=True, exist_ok=True)
 
-    out = {}
+    out: set[str] = set()
     fluent_assets = SELF_DIR / "fluentui-emoji" / "assets"
     for subdir in os.listdir(fluent_assets):
         with (fluent_assets / subdir / "metadata.json").open(encoding="utf-8") as f:
@@ -88,7 +90,7 @@ def collect_emojis(type: str, twemoji: dict[str, str]) -> dict[str, str]:
                     unicode = unicode[1:]
                 dist = dir / f"{unicode}.svg"
                 shutil.copyfile(full, dist)
-                out[unicode] = str(dist)
+                out.add(unicode)
         else:
             file = f"{base_name.lower().replace(' ', '_')}_{type}.svg"
             full = fluent_assets / subdir / TYPE_TO_DIR[type] / file
@@ -100,13 +102,20 @@ def collect_emojis(type: str, twemoji: dict[str, str]) -> dict[str, str]:
                 unicode = unicode[1:]
             dist = dir / f"{unicode}.svg"
             shutil.copyfile(full, dist)
-            out[unicode] = str(dist)
-    return out
+            out.add(unicode)
+    return out, dir
 
 
 def all_twemoji() -> dict[str, str]:
     base = SELF_DIR / "twemoji" / "assets" / "svg"
     return {it.removesuffix(".svg"): str(base.joinpath(it)) for it in os.listdir(base)}
+
+
+def append_twemoji(existing: set[str], twemoji: dict[str, str], dir: Path):
+    for codepoint, path in twemoji.items():
+        if codepoint in existing:
+            continue
+        shutil.copyfile(path, dir / f"{codepoint}.svg")
 
 
 def main():
@@ -131,16 +140,17 @@ def main():
     args = parser.parse_args()
 
     twemoji = all_twemoji()
-    fluent = collect_emojis(args.type, twemoji)
+    existing, dir = collect_emojis(args.type, twemoji)
     if args.fallback:
-        twemoji.update(fluent)
-        fluent = twemoji
+        append_twemoji(existing, twemoji, dir)
+
+    fill_emojis(dir)
 
     config = make_config(
         output_name=args.output,
         family=args.family,
         color_format=args.color_format,
-        paths=list(fluent.values()),
+        paths=[str(dir / it) for it in os.listdir(dir)],
     )
     with tempfile.NamedTemporaryFile("w", suffix=".toml", delete_on_close=False) as f:
         f.write(config)

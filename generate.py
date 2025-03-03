@@ -4,6 +4,8 @@ from pathlib import Path
 import json
 import argparse
 import tempfile
+import shutil
+from fill_emojis import fill_emojis
 
 SELF_DIR = Path(__file__).parent
 COLOR_FORMATS = [
@@ -44,9 +46,13 @@ wght = 400
 """
 
 
-def emoji_paths() -> list[str]:
-    base = SELF_DIR / "twemoji" / "assets" / "svg"
-    return [str(base.joinpath(it)) for it in os.listdir(base)]
+def copy_emojis() -> Path:
+    dir = SELF_DIR / "build" / "twemoji"
+    shutil.rmtree(dir, ignore_errors=True)
+    dir.mkdir(parents=True, exist_ok=True)
+
+    shutil.copytree(SELF_DIR / "twemoji" / "assets" / "svg", dir, dirs_exist_ok=True)
+    return dir
 
 
 def main():
@@ -64,11 +70,14 @@ def main():
     )
     args = parser.parse_args()
 
+    dist_dir = copy_emojis()
+    fill_emojis(dist_dir)
+
     config = make_config(
         output_name=args.output,
         family=args.family,
         color_format=args.color_format,
-        paths=emoji_paths(),
+        paths=[str(dist_dir / it) for it in os.listdir(dist_dir)],
     )
     with tempfile.NamedTemporaryFile("w", suffix=".toml", delete_on_close=False) as f:
         f.write(config)
