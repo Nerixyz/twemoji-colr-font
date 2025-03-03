@@ -32,43 +32,44 @@ jobs:
               family: "Twemoji - CffColr0",
               color: cff_colr_0,
             }
-          - {
-              file: "Twemoji_CffColr1.otf",
-              family: "Twemoji - CffColr1",
-              color: cff_colr_1,
-            }
-          - {
-              file: "Twemoji_Cff2Colr0.otf",
-              family: "Twemoji - Cff2Colr0",
-              color: cff2_colr_0,
-            }
-          - {
-              file: "Twemoji_Cff2Colr1.otf",
-              family: "Twemoji - Cff2Colr1",
-              color: cff2_colr_1,
-            }
-          - {
-              file: "Twemoji_Picosvg.ttf",
-              family: "Twemoji - Picosvg",
-              color: picosvg,
-            }
-          - {
-              file: "Twemoji_Picosvgz.ttf",
-              family: "Twemoji - Picosvgz",
-              color: picosvgz,
-            }
-          - {
-              file: "Twemoji_Untouchedsvg.ttf",
-              family: "Twemoji - Untouchedsvg",
-              color: untouchedsvg,
-            }
-          - {
-              file: "Twemoji_Untouchedsvgz.ttf",
-              family: "Twemoji - Untouchedsvgz",
-              color: untouchedsvgz,
-            }
-          - { file: "Twemoji_Cbdt.ttf", family: "Twemoji - Cbdt", color: cbdt }
-          - { file: "Twemoji_Sbix.ttf", family: "Twemoji - Sbix", color: sbix }
+          # The CI is slow enough
+          # - {
+          #     file: "Twemoji_CffColr1.otf",
+          #     family: "Twemoji - CffColr1",
+          #     color: cff_colr_1,
+          #   }
+          # - {
+          #     file: "Twemoji_Cff2Colr0.otf",
+          #     family: "Twemoji - Cff2Colr0",
+          #     color: cff2_colr_0,
+          #   }
+          # - {
+          #     file: "Twemoji_Cff2Colr1.otf",
+          #     family: "Twemoji - Cff2Colr1",
+          #     color: cff2_colr_1,
+          #   }
+          # - {
+          #     file: "Twemoji_Picosvg.ttf",
+          #     family: "Twemoji - Picosvg",
+          #     color: picosvg,
+          #   }
+          # - {
+          #     file: "Twemoji_Picosvgz.ttf",
+          #     family: "Twemoji - Picosvgz",
+          #     color: picosvgz,
+          #   }
+          # - {
+          #     file: "Twemoji_Untouchedsvg.ttf",
+          #     family: "Twemoji - Untouchedsvg",
+          #     color: untouchedsvg,
+          #   }
+          # - {
+          #     file: "Twemoji_Untouchedsvgz.ttf",
+          #     family: "Twemoji - Untouchedsvgz",
+          #     color: untouchedsvgz,
+          #   }
+          # - { file: "Twemoji_Cbdt.ttf", family: "Twemoji - Cbdt", color: cbdt }
+          # - { file: "Twemoji_Sbix.ttf", family: "Twemoji - Sbix", color: sbix }
 
     steps:
       - uses: actions/checkout@v4

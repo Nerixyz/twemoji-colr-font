@@ -325,10 +325,14 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "nanoemoji" },
+    { name = "regex" },
 ]
 
 [package.metadata]
-requires-dist = [{ name = "nanoemoji", git = "https://github.com/Nerixyz/nanoemoji.git?rev=132f9b4f3be20ab4d93b6baab3cd4718cd52c1c4" }]
+requires-dist = [
+    { name = "nanoemoji", git = "https://github.com/Nerixyz/nanoemoji.git?rev=132f9b4f3be20ab4d93b6baab3cd4718cd52c1c4" },
+    { name = "regex", specifier = ">=2024.11.6" },
+]
 
 [[package]]
 name = "ufo2ft"
