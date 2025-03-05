@@ -60,7 +60,6 @@ SKINTONES = [
 
 def collect_emojis(type: str, twemoji: dict[str, str]) -> tuple[set[str], Path]:
     dir = SELF_DIR / "build" / "fluent" / type
-    shutil.rmtree(dir, ignore_errors=True)
     dir.mkdir(parents=True, exist_ok=True)
 
     out: set[str] = set()

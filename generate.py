@@ -48,7 +48,6 @@ wght = 400
 
 def copy_emojis() -> Path:
     dir = SELF_DIR / "build" / "twemoji"
-    shutil.rmtree(dir, ignore_errors=True)
     dir.mkdir(parents=True, exist_ok=True)
 
     shutil.copytree(SELF_DIR / "twemoji" / "assets" / "svg", dir, dirs_exist_ok=True)
