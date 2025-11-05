@@ -1,6 +1,6 @@
 [submodule "twemoji"]
 	path = twemoji
-	url = https://github.com/nerixyz/twemoji
+	url = https://github.com/jdecked/twemoji
 [submodule "fluentui-emoji"]
 	path = fluentui-emoji
 	url = https://github.com/microsoft/fluentui-emoji
