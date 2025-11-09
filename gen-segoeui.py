@@ -1,7 +1,6 @@
 from fontTools.ttLib import TTFont
 import argparse
 import os
-import shutil
 
 
 def main():
@@ -10,7 +9,10 @@ def main():
         "gen-segoeui.py", description="Generate a font with the segoeui name"
     )
     parser.add_argument(
-        "-o", "--output", help="Output file name (e.g. font.ttf)", default=semj_path
+        "-o",
+        "--output",
+        help="Output file name (e.g. font.ttf)",
+        default="SegoeUI_Twemoji.ttf",
     )
     parser.add_argument(
         "input",
@@ -19,7 +21,6 @@ def main():
     args = parser.parse_args()
     og = TTFont(semj_path)
     target = TTFont(args.input)
-    # shutil.copyfile(semj_path, semj_path + ".bak")
 
     target["name"] = og["name"]
     target.save(args.output)
