@@ -36,3 +36,9 @@ uv run generate.py glyf_colr_1 -o font.ttf --family "Twemoji - COLRv1"
 ```
 
 The font will be located in the `build/` directory.
+
+On Windows, you can use `gen-segoeui.py` to set the name of a font to `Segoe UI Emoji` (copies the name from the default font). This font can then be installed and will get added as a replacement for the default Windows emoji font.
+
+```sh
+uv run gen-segoeui.py build/Twemoji_GlyfColr1.ttf -o build/SegoeUI_Twemoji.ttf
+```
